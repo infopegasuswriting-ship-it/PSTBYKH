@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F4EEE0">
+  <meta name="description" content="The Marked Paper — interactive examiner breakdown of two illustrative 14-mark answers on the 1857 War of Independence.">
+  <title>Inside Their Papers · PST by Khizar Hayat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,500,0,0;9..144,600,0,0&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;450;500;600;650;700&display=swap" rel="stylesheet">
+  <style>
+
+    :root{
+      --st:#0E3B3F;--pa:#F4EEE0;--pw:#FBF9F4;--in:#14201F;--sl:#4A5A58;--cs:#7FA79D;--sn:#C9BFA7;--vm:#D6402B;--my:#F2C94C;
+      --serif:'Fraunces','DM Serif Display',Georgia,serif;
+      --sans:'Inter',Arial,sans-serif;
+      --mono:'IBM Plex Mono',monospace;
+      --max:1300px;
+    }
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:96px}
+    body{margin:0;color:var(--in);font-family:var(--sans);background:var(--pa);font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased}
+    button{font:inherit;cursor:pointer}
+    button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--vm);outline-offset:4px}
+    a{color:inherit}
+    ::selection{background:var(--my);color:var(--in)}
+    .wrap{width:min(calc(100% - 80px),var(--max));margin-inline:auto}
+    .eyebrow,.mono{font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;font-size:11px;line-height:1.65;font-weight:500}
+    .muted{color:var(--sl)}
+    .skip{position:absolute;top:-90px;left:12px;padding:10px 16px;background:var(--my);z-index:1000}
+    .skip:focus{top:8px}
+    .section{padding:86px 0}
+    .section-heading{display:flex;gap:24px;justify-content:space-between;align-items:end;margin-bottom:31px}
+    .section-heading .eyebrow{display:block;color:var(--sl);margin-bottom:11px}
+    h2{font-size:clamp(32px,4vw,52px);line-height:1.12;margin-bottom:0}
+    .section-intro{max-width:410px;margin:0;color:var(--sl);line-height:1.75;font-size:14px}
+    .question-card{position:relative;background:var(--pw);border:1px solid var(--sn);padding:35px 39px 39px;display:grid;grid-template-columns:minmax(0,1fr) 98px;gap:32px}
+    .question-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--my)}
+    .question-label{color:var(--sl);margin-bottom:18px}
+    .question-text{font-family:var(--serif);font-weight:500;font-size:clamp(22px,2.55vw,32px);letter-spacing:-.024em;line-height:1.46;margin:0;max-width:1010px}
+    .question-mark{width:93px;height:93px;border:2px solid var(--st);display:flex;flex-direction:column;justify-content:center;align-items:center;align-self:center;background:var(--my)}
+    .question-mark strong{font-family:var(--serif);font-size:45px;line-height:1;font-weight:600;letter-spacing:-.055em}
+    .question-mark span{font-family:var(--mono);text-transform:uppercase;font-size:8px;letter-spacing:.13em;margin-top:6px}
+    .decode-grid{display:grid;grid-template-columns:1fr 1fr 1.05fr;gap:14px;margin-top:16px}
+    .decode-cell{min-height:170px;padding:23px 23px 21px;border:1px solid var(--sn);background:#EFE8D8}
+    .decode-cell .eyebrow{color:var(--sl);display:block;margin-bottom:15px}
+    .decode-cell strong{display:block;font-size:21px;font-weight:600;letter-spacing:-.035em;line-height:1.3}
+    .decode-cell p{margin:9px 0 0;font-size:13px;line-height:1.6;color:var(--sl)}
+    .decode-cell.theme{background:var(--st);color:var(--pa);border-color:var(--st)}
+    .decode-cell.theme .eyebrow{color:var(--cs)}
+    .decode-cell.theme p{color:#DBE5DF}
+    .decode-cell.formula{background:var(--my);border-color:#D7AC21}
+    .decode-cell.formula .eyebrow,.decode-cell.formula p{color:var(--in)}
+    .formula-row{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-top:5px}
+    .formula-row span{font-family:var(--serif);font-size:21px;font-weight:600;line-height:1.3}
+    .formula-row b{font-family:var(--mono);font-size:15px;font-weight:400}
+    .blueprint{background:#EAE2D2;border-top:1px solid var(--sn);border-bottom:1px solid var(--sn)}
+    .bp-head{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:25px}
+    .bp-head h2{max-width:790px}
+    .text-action{background:transparent;border:0;border-bottom:1px solid var(--st);padding:7px 0;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.035em;font-weight:600;white-space:nowrap;color:var(--st)}
+    .text-action:hover{border-color:var(--vm)}
+    .blueprint-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .lens-card{background:var(--pw);border:1px solid var(--sn);overflow:hidden}
+    .lens-trigger{display:grid;grid-template-columns:51px minmax(0,1fr) 35px;gap:17px;width:100%;text-align:left;align-items:center;padding:23px 26px;background:transparent;border:0;color:var(--in)}
+    .lens-trigger:hover,.lens-trigger[aria-expanded="true"]{background:#F5F0E7}
+    .lens-code{font:600 13px var(--mono);border:1px solid var(--sn);padding:8px 9px;text-align:center;color:var(--st)}
+    .lens-title{font-family:var(--serif);font-size:25px;font-weight:600;letter-spacing:-.025em;line-height:1.25}
+    .lens-subtitle{display:block;font:400 12px var(--sans);color:var(--sl);margin-top:5px;letter-spacing:0}
+    .plus{width:28px;height:28px;border:1px solid var(--sn);display:grid;place-items:center;font-size:19px;font-weight:400;line-height:1;color:var(--st)}
+    .lens-trigger[aria-expanded="true"] .plus{background:var(--st);border-color:var(--st);color:var(--pa)}
+    .lens-content{padding:0 26px 25px 94px}
+    .lens-content[hidden]{display:none}
+    .lens-content ul{padding-left:19px;margin:4px 0 22px}
+    .lens-content li{font-size:13px;line-height:1.7;margin:8px 0;color:var(--in)}
+    .lens-content li::marker{color:var(--st)}
+    .link-box{padding:13px 16px;border-left:3px solid var(--vm);background:#F3EDE3;color:var(--in);font-size:13px;line-height:1.65}
+    .link-box strong{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:5px}
+    .conclusion-strip{margin-top:14px;border:1px solid var(--sn);background:var(--pw);display:grid;grid-template-columns:84px minmax(0,1fr) auto;gap:18px;align-items:center;padding:21px 26px}
+    .conclusion-strip .seal{background:var(--my);padding:14px 7px;display:grid;place-items:center;text-align:center;font:600 10px var(--mono);text-transform:uppercase}
+    .conclusion-strip strong{font-family:var(--serif);font-size:24px;line-height:1.25}
+    .conclusion-strip p{font-size:13px;color:var(--sl);line-height:1.6;margin:5px 0 0}
+    .conclusion-strip .mono{color:var(--sl);white-space:nowrap}
+    .compare{background:var(--pa)}
+    .compare-subhead{display:flex;align-items:end;gap:20px;justify-content:space-between;margin-bottom:19px}
+    .compare-subhead h2{max-width:750px}
+    .compare-controls{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:22px 0 20px}
+    .control{border:1px solid var(--sn);padding:10px 15px;color:var(--in);background:var(--pw);font:600 11px var(--mono);letter-spacing:.03em;text-transform:uppercase;min-height:41px}
+    .control:hover{border-color:var(--st)}
+    .control[aria-pressed="true"]{background:var(--st);border-color:var(--st);color:var(--pa)}
+    .control.toggle{margin-left:auto;display:flex;gap:9px;align-items:center}
+    .switch-dot{width:26px;height:15px;background:var(--sn);border-radius:20px;position:relative;display:inline-block}
+    .switch-dot::after{content:"";position:absolute;left:3px;top:3px;width:9px;height:9px;border-radius:50%;background:var(--pw);transition:transform .2s}
+    .toggle[aria-pressed="true"] .switch-dot{background:var(--cs)}
+    .toggle[aria-pressed="true"] .switch-dot::after{transform:translateX(11px)}
+    .mobile-paper-tabs{display:none;gap:8px;margin:17px 0}
+    .paper-tab{flex:1;min-width:0}
+    .paper-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:stretch}
+    .paper{background:var(--pw);border:1px solid var(--sn);display:flex;flex-direction:column;min-width:0;position:relative}
+    .paper.strong-paper{border-top:4px solid var(--st)}
+    .paper.weak-paper{border-top:4px solid var(--vm)}
+    .paper-header{padding:24px 29px 22px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;border-bottom:1px solid var(--sn);background:#F9F6EF}
+    .paper-header .eyebrow{display:block;color:var(--sl);margin-bottom:6px}
+    .paper-header h3{font-family:var(--serif);font-weight:600;font-size:31px;line-height:1.12;letter-spacing:-.03em;margin:0 0 7px}
+    .paper-header .caption{color:var(--sl);margin:0;font-size:12px;line-height:1.5}
+    .paper-score{min-width:96px;align-self:center;text-align:center;border-left:1px solid var(--sn);padding-left:17px}
+    .paper-score strong{font-family:var(--serif);display:block;font-size:43px;letter-spacing:-.065em;line-height:1;color:var(--st)}
+    .weak-paper .paper-score strong{color:var(--vm)}
+    .paper-score strong span{font-family:var(--sans);font-size:16px;letter-spacing:0;color:var(--sl);font-weight:500}
+    .paper-score small{display:block;color:var(--sl);font:500 10px var(--mono);text-transform:uppercase;letter-spacing:.045em;margin-top:8px}
+    .paper-sheet{position:relative;padding:31px 31px 19px 57px;flex:1;background:linear-gradient(90deg,transparent 46px,rgba(214,64,43,.24) 47px,transparent 48px),repeating-linear-gradient(to bottom,transparent 0,transparent 33px,rgba(201,191,167,.25) 34px,transparent 35px)}
+    .paper-sheet::after{content:"";position:absolute;left:24px;top:20px;bottom:22px;border-left:1px dotted #D5CBB9}
+    .response-p{font-size:14px;line-height:1.85;margin:0 0 22px;position:relative;transition:background .25s,box-shadow .25s;letter-spacing:-.006em}
+    .response-p[data-focus-key]{scroll-margin-top:120px}
+    .response-p.focused{background:rgba(242,201,76,.17);box-shadow:0 0 0 8px rgba(242,201,76,.17)}
+    .response-p.faded{opacity:.51}
+    .response-p .line-marker{position:absolute;left:-39px;top:3px;font-family:var(--mono);font-size:10px;color:var(--sl)}
+    .marked{background:linear-gradient(to bottom,transparent 71%,rgba(242,201,76,.49) 71%,rgba(242,201,76,.49) 100%)}
+    .ink-underline{text-decoration:underline;text-decoration-color:var(--vm);text-decoration-thickness:2px;text-underline-offset:4px;text-decoration-style:wavy}
+    .pen-comment{display:flex;align-items:flex-start;gap:10px;margin:8px 0 20px -7px;padding:9px 10px 9px 11px;border-left:2px solid var(--vm);background:rgba(214,64,43,.045);font-size:12px;color:var(--in);line-height:1.5}
+    .pen-comment::before{content:"↳";color:var(--vm);font-size:19px;line-height:1.2;font-weight:700;transform:rotate(-9deg)}
+    .pen-comment strong{font-weight:650}
+    .paper:not(.annotations-on) .pen-comment{display:none}
+    .paper:not(.annotations-on) .ink-underline{text-decoration:none}
+    .paper:not(.annotations-on) .marked{background:none}
+    .paper:not(.annotations-on) .pen-scrawl{display:none}
+    .pen-scrawl{position:absolute;font-family:var(--serif);font-style:italic;color:var(--vm);font-size:35px;font-weight:600;right:2px;top:-20px;transform:rotate(-17deg);line-height:1}
+    .pen-scrawl.cross{font-family:var(--sans);font-weight:400;font-size:28px;right:4px;top:-19px}
+    .sheet-foot{padding:17px 29px;border-top:1px solid var(--sn);display:flex;justify-content:space-between;gap:18px;align-items:center;background:#F9F6EF}
+    .sheet-foot span{font:500 10px var(--mono);color:var(--sl);text-transform:uppercase;letter-spacing:.045em}
+    .sheet-foot b{font-family:var(--mono);color:var(--st);font-size:10px;text-transform:uppercase}
+    .compare-explain{background:var(--st);color:var(--pa);padding:26px 30px;margin-top:18px;display:grid;grid-template-columns:220px minmax(0,1fr);gap:29px;align-items:center}
+    .compare-explain .eyebrow{color:var(--cs)}
+    .compare-explain h3{font:600 24px var(--serif);letter-spacing:-.02em;margin:7px 0 0;line-height:1.2}
+    .compare-explain p{font-size:14px;line-height:1.85;margin:0;color:#E0EAE3}
+    .focus-controls{display:flex;flex-wrap:wrap;gap:8px;margin:15px 0 0}
+    .focus-controls .control{padding:9px 15px;min-height:36px;font-size:10px}
+    .focus-label{font-size:13px;color:var(--sl);margin:0}
+    .assessment{background:var(--pw);border-top:1px solid var(--sn)}
+    .assessment-grid{display:grid;grid-template-columns:minmax(0,1.18fr) minmax(260px,.7fr);gap:30px;align-items:start}
+    .assessment-table{width:100%;border-collapse:collapse;margin-top:27px}
+    .assessment-table th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--sl);text-align:left;border-bottom:2px solid var(--st);padding:15px 10px 15px 0;vertical-align:top}
+    .assessment-table td{font-size:13px;line-height:1.7;padding:17px 12px 17px 0;border-bottom:1px solid var(--sn);vertical-align:top}
+    .assessment-table td:first-child{font-weight:650;color:var(--st);width:24%}
+    .assessment-table td:nth-child(2){color:var(--sl)}
+    .assessment-aside{background:var(--pa);border:1px solid var(--sn);padding:26px 25px 28px}
+    .assessment-aside .eyebrow{color:var(--sl)}
+    .assessment-aside h3{font:600 27px var(--serif);line-height:1.2;margin:13px 0 12px}
+    .assessment-aside p{font-size:13px;line-height:1.8;color:var(--sl)}
+    .score-viz{padding:18px 0 22px;border-block:1px solid var(--sn);margin:22px 0}
+    .bar-label{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:650;margin-bottom:8px}
+    .bar-label .mono{color:var(--st);font-size:11px}
+    .bar-track{height:8px;background:#D8D0BF;margin:0 0 23px;position:relative}
+    .bar-fill{height:100%;width:0;background:var(--st);transition:width .65s ease}
+    .bar-fill.low{background:var(--vm)}
+    .bar-track:last-child{margin-bottom:0}
+    .small-note{font-size:11px!important;color:var(--sl)!important;line-height:1.7!important}
+
+    .breakdown-shell{min-height:100vh}
+    .breakdown-shell>.section:first-child{padding-top:52px}
+    @media(max-width:1100px){.wrap{width:min(calc(100% - 56px),var(--max))}.paper-header{padding:22px 20px}.paper-sheet{padding:27px 24px 19px 49px}.response-p{font-size:13px}.pen-comment{font-size:11px}.paper-header h3{font-size:27px}.paper-score{min-width:78px;padding-left:9px}.paper-score strong{font-size:36px}}
+    @media(max-width:800px){.section{padding:66px 0}.section-heading,.compare-subhead{display:block}.section-intro{margin-top:17px;max-width:600px}.decode-grid{grid-template-columns:1fr}.decode-cell{min-height:unset}.blueprint-grid{grid-template-columns:1fr}.assessment-grid{grid-template-columns:1fr}.paper-pair{grid-template-columns:1fr}.mobile-paper-tabs{display:flex}.paper[data-paper-id="weak"]{display:none}.paper-pair[data-active-paper="weak"] .paper[data-paper-id="weak"]{display:flex}.paper-pair[data-active-paper="weak"] .paper[data-paper-id="strong"]{display:none}.paper-pair[data-active-paper="strong"] .paper[data-paper-id="strong"]{display:flex}.paper-pair[data-active-paper="strong"] .paper[data-paper-id="weak"]{display:none}.compare-explain{grid-template-columns:1fr;gap:10px}.control.toggle{margin-left:0}.conclusion-strip{grid-template-columns:65px 1fr}.conclusion-strip .mono{display:none}.assessment-aside{max-width:650px}}
+    @media(max-width:540px){.wrap{width:calc(100% - 34px)}.section{padding:53px 0}.breakdown-shell>.section:first-child{padding-top:29px}.question-card{grid-template-columns:1fr;gap:22px;padding:25px 24px 27px}.question-mark{width:69px;height:69px;grid-row:1;justify-self:start}.question-mark strong{font-size:34px}.question-mark span{font-size:7px}.question-text{font-size:23px}.decode-cell{padding:19px}.bp-head{display:block}.bp-head .text-action{margin-top:18px}.lens-trigger{padding:18px 13px;gap:12px;grid-template-columns:42px 1fr 26px}.lens-code{font-size:10px;padding:8px 5px}.lens-title{font-size:23px}.lens-content{padding:0 17px 20px 67px}.lens-content li{font-size:12px}.conclusion-strip{padding:16px;gap:12px}.conclusion-strip strong{font-size:20px}.paper-sheet{padding:27px 19px 15px 49px}.paper-header{gap:10px}.paper-score{min-width:70px}.paper-header h3{font-size:25px}.compare-controls{gap:8px}.control{font-size:10px;padding:9px 10px}.compare-explain{padding:23px}.assessment-table th,.assessment-table td{font-size:11px;padding-right:8px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::after,*::before{transition:none!important;animation:none!important}}
+    @media print{.compare-controls,.mobile-paper-tabs,.focus-controls,.text-action{display:none!important}.section{padding:25px 0}.paper-pair{display:block}.paper{break-inside:avoid;margin-bottom:20px}.lens-content[hidden]{display:block}.wrap{width:95%}body{background:white}}
+  </style>
+</head>
+<body>
+  <a href="#decode" class="skip">Skip to question breakdown</a>
+  <div style="max-width:1160px;margin:16px auto;padding:0 24px"><a href="index.html#marked-paper">← Back to Pakistan Studies</a></div><main class="breakdown-shell" id="main">
+    <section class="section" id="decode" aria-labelledby="decode-heading">
+      <div class="wrap">
+        <div class="section-heading">
+          <div><span class="eyebrow">01 / DECODE THE QUESTION</span><h2 id="decode-heading">What is the examiner asking?</h2></div>
+          <p class="section-intro">Before writing, identify the statement you must assess and the bigger historical outcome every argument must explain.</p>
+        </div>
+        <div class="question-card">
+          <div>
+            <p class="eyebrow question-label">HISTORY / LONG-ANSWER QUESTION</p>
+            <p class="question-text">“To what extent were the different aims of Indian groups in 1857 the main reason why the War of Independence was short-lived? Explain your answer.”</p>
+          </div>
+          <div class="question-mark" aria-label="14 marks"><strong>14</strong><span>marks</span></div>
+        </div>
+        <div class="decode-grid">
+          <div class="decode-cell">
+            <span class="eyebrow">Examiner statement</span>
+            <strong>Different aims of Indians</strong>
+            <p>The proposition you must consider—not merely repeat.</p>
+          </div>
+          <div class="decode-cell theme">
+            <span class="eyebrow">Main theme</span>
+            <strong>Failure of the War of Independence</strong>
+            <p>Every explanation must link to why the revolt was short-lived.</p>
+          </div>
+          <div class="decode-cell formula">
+            <span class="eyebrow">Build every developed paragraph</span>
+            <div class="formula-row"><span>Reason</span><b>→</b><span>Effect</span><b>→</b><span>Failure</span></div>
+            <p>Do not stop at naming a reason. Explain its consequence for the revolt.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  
+    <section class="section compare" id="compare" aria-labelledby="compare-heading">
+      <div class="wrap">
+        <div class="compare-subhead">
+          <div><span class="eyebrow muted">03 / THE PAPER COMPARISON</span><h2 id="compare-heading">Read the answer.<br>Then read the examiner's pen.</h2></div>
+          <p class="section-intro">These are model-written teaching examples, not real student submissions. Their marks illustrate relative quality and require teacher moderation before public claims.</p>
+        </div>
+        <div class="compare-controls" role="group" aria-label="Paper comparison options">
+          <button type="button" class="control" id="read-weak">Read weaker answer</button>
+          <button type="button" class="control" id="read-strong">Read stronger answer</button>
+          <button type="button" class="control toggle" id="annotations-toggle" aria-pressed="true"><span class="switch-dot" aria-hidden="true"></span><span id="annotations-label">Examiner notes on</span></button>
+        </div>
+        <div class="mobile-paper-tabs" role="group" aria-label="Choose a paper to view">
+          <button class="control paper-tab" data-show-paper="weak" type="button" aria-pressed="false">Paper 01 / Weak</button>
+          <button class="control paper-tab" data-show-paper="strong" type="button" aria-pressed="true">Paper 02 / Strong</button>
+        </div>
+        <div class="paper-pair" id="paper-pair" data-active-paper="strong">
+          <article class="paper weak-paper annotations-on" data-paper-id="weak" aria-label="Illustrative weak answer, 4 out of 14">
+            <header class="paper-header">
+              <div><span class="eyebrow">PAPER 01 / UNDERDEVELOPED</span><h3>Knowledge, listed.</h3><p class="caption">Mentions reasons. Rarely explains their effect.</p></div>
+              <div class="paper-score"><strong>4<span>/14</span></strong><small>Illustrative</small></div>
+            </header>
+            <div class="paper-sheet">
+              <p class="response-p" data-focus-key="e1"><span class="line-marker">01</span>The War of Independence in 1857 was short-lived because <span class="ink-underline">Indians had different aims</span>. Hindus and Muslims had different interests. People were divided by caste and religion. Many Indian states did not take part. There were different groups of people across India and they did not all agree. The Nizam of Hyderabad and Sikh princes backed the British. Unity was very important in a war.<span class="pen-scrawl cross" aria-hidden="true">×</span></p>
+              <div class="pen-comment"><span><strong>Only identifying points.</strong> Why did these differences help the British defeat the revolt?</span></div>
+              <p class="response-p" data-focus-key="e2"><span class="line-marker">02</span>There was also no common leader. Bahadur Shah Zafar, Nana Sahib and Rani of Jhansi were important leaders. They were famous people with their own interests. The Indians did not have a proper plan. A war needs planning and a leader, and they did not have one leader for everyone.</p>
+              <div class="pen-comment"><span><strong>Names are not analysis.</strong> Show what a lack of command and planning actually caused.</span></div>
+              <p class="response-p" data-focus-key="e3"><span class="line-marker">03</span>The Indians did not have enough <span class="ink-underline">money, food or weapons</span>. They had some money from British treasuries but it was not enough. They also had communication problems. Soldiers need food and equipment to fight properly, and these things were needed in this war.</p>
+              <div class="pen-comment"><span><strong>Another list.</strong> Connect weak supplies and coordination to the short duration of the war.</span></div>
+              <p class="response-p" data-focus-key="e4"><span class="line-marker">04</span>The British had modern weapons and good soldiers. Their commanders were trained and disciplined. The army was regular and stronger. They were better at fighting, and so they won.</p>
+              <div class="pen-comment"><span><strong>Some relevant knowledge, little development.</strong> Explain British military advantages.</span></div>
+              <p class="response-p" data-focus-key="conclusion"><span class="line-marker">05</span><span class="ink-underline">In conclusion, all these reasons caused the war to fail.</span></p>
+              <div class="pen-comment"><span><strong>No judgement.</strong> The question asks whether different aims were the <em>main</em> cause—not simply for a list of causes.</span></div>
+            </div>
+            <footer class="sheet-foot"><span>Illustrative practice script</span><b>Thin explanation · No evaluation</b></footer>
+          </article>
+          <article class="paper strong-paper annotations-on" data-paper-id="strong" aria-label="Illustrative strong answer, 12 out of 14">
+            <header class="paper-header">
+              <div><span class="eyebrow">PAPER 02 / DEVELOPED & EVALUATED</span><h3>Knowledge, explained.</h3><p class="caption">Develops causes, links consequences, reaches a judgement.</p></div>
+              <div class="paper-score"><strong>12<span>/14</span></strong><small>Illustrative</small></div>
+            </header>
+            <div class="paper-sheet">
+              <p class="response-p" data-focus-key="e1"><span class="line-marker">01</span><span class="marked">Different aims among Indian groups were a major reason the War of Independence was short-lived</span> because they prevented a united response to British forces. Religious and caste divisions, as well as differing interests among Hindus and Muslims, reduced cooperation. Many states stayed out, while the Nizam of Hyderabad and Sikh princes supported the British. <span class="ink-underline">Consequently, rebel resistance remained scattered and British forces could defeat groups separately.</span><span class="pen-scrawl" aria-hidden="true">✓</span></p>
+              <div class="pen-comment"><span><strong>E1: Developed argument.</strong> Specific examples lead to a consequence, then a direct link to the question.</span></div>
+              <p class="response-p" data-focus-key="e2"><span class="line-marker">02</span>However, the absence of common leadership was another major weakness. Bahadur Shah Zafar, Nana Sahib and the Rani of Jhansi had separate interests, and no shared political or military plan united the rebels. Their actions were not properly coordinated, whereas British forces acted with clearer strategy. <span class="ink-underline">Without united direction, rebel resistance lost momentum, making the revolt easier to suppress.</span><span class="pen-scrawl" aria-hidden="true">✓</span></p>
+              <div class="pen-comment"><span><strong>E2: Explanation and link.</strong> The answer shows how fragmented command affected the outcome.</span></div>
+              <p class="response-p" data-focus-key="e3"><span class="line-marker">03</span>Limited resources further shortened the struggle. Money obtained from British treasuries was not enough to sustain the uprising; feeding fighters and supplying weapons remained difficult. Poor communication networks also prevented coordinated movements. <span class="ink-underline">These problems weakened the rebels' ability to continue fighting effectively.</span><span class="pen-scrawl" aria-hidden="true">✓</span></p>
+              <div class="pen-comment"><span><strong>E3: Sustained causation.</strong> Resource shortages are shown to limit the duration and effectiveness of resistance.</span></div>
+              <p class="response-p" data-focus-key="e4"><span class="line-marker">04</span>British military strength made these weaknesses more damaging. The British had modern weapons, professionally trained troops and skilled, disciplined commanders. Their more organised response enabled them to exploit divided opposition. <span class="ink-underline">Thus, the rebels faced an opponent better prepared to defeat them.</span><span class="pen-scrawl" aria-hidden="true">✓</span></p>
+              <div class="pen-comment"><span><strong>E4: Balanced alternative.</strong> British superiority is weighed as a separate explanation for the quick defeat.</span></div>
+              <p class="response-p" data-focus-key="conclusion"><span class="line-marker">05</span><span class="marked">Overall, different aims were a leading reason</span> because they prevented the rebels from building a united movement. Yet disunity alone does not fully explain why the war was short-lived: poor leadership, inadequate supplies and British strength also mattered. <span class="ink-underline">Therefore, different aims were responsible to a large extent, but they were most damaging in combination with these other weaknesses.</span><span class="pen-scrawl" aria-hidden="true">✓</span></p>
+              <div class="pen-comment"><span><strong>Evaluative conclusion.</strong> Directly answers “to what extent?” and qualifies the judgement using other factors.</span></div>
+            </div>
+            <footer class="sheet-foot"><span>Illustrative practice script</span><b>Explained · Linked · Evaluated</b></footer>
+          </article>
+        </div>
+        <div class="compare-explain" id="focus-explain" aria-live="polite">
+          <div><span class="eyebrow">EXAMINER'S LENS</span><h3 id="focus-title">What makes the difference?</h3></div>
+          <p id="focus-description">The weaker response names several correct ideas without showing how they caused the revolt to fail. The stronger response builds a chain of reasoning and finishes with a supported judgement.</p>
+        </div>
+        <div class="focus-controls" role="group" aria-label="Focus the comparison on one explanation">
+          <p class="focus-label" style="width:100%">Select a part of the answer to examine its reasoning:</p>
+          <button type="button" class="control" data-focus="e1" aria-pressed="false">E1 · Unity</button>
+          <button type="button" class="control" data-focus="e2" aria-pressed="false">E2 · Leadership</button>
+          <button type="button" class="control" data-focus="e3" aria-pressed="false">E3 · Resources</button>
+          <button type="button" class="control" data-focus="e4" aria-pressed="false">E4 · British strength</button>
+          <button type="button" class="control" data-focus="conclusion" aria-pressed="false">Conclusion</button>
+          <button type="button" class="control" data-focus="all" aria-pressed="true">Show all</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section blueprint" id="blueprint" aria-labelledby="bp-heading">
+      <div class="wrap">
+        <div class="bp-head">
+          <div><span class="eyebrow muted">02 / THE REFERENCE MARKING PLAN</span><h2 id="bp-heading">Four explanations. One judgement.</h2></div>
+          <button class="text-action" id="expand-all" type="button" aria-label="Expand all four evidence cards">Expand all +</button>
+        </div>
+        <p class="section-intro" style="margin:-8px 0 26px;max-width:760px">The E1–E4 labels below follow your supplied teaching reference. They identify explanation areas, <strong>not separate numerical mark allocations</strong>. Open each card for the required historical detail and its link to the question.</p>
+        <div class="blueprint-grid">
+          <article class="lens-card">
+            <button class="lens-trigger" type="button" aria-expanded="true" aria-controls="lens-e1" data-lens="e1">
+              <span class="lens-code">E1</span><span class="lens-title">Different aims / lack of unity <span class="lens-subtitle">Why the rebel side remained scattered</span></span><span class="plus" aria-hidden="true">−</span>
+            </button>
+            <div class="lens-content" id="lens-e1"><ul>
+              <li>Indians were divided by caste and religion.</li>
+              <li>Hindus and Muslims had differing interests.</li>
+              <li>Many Indian states did not join the war.</li>
+              <li>The Nizam of Hyderabad and Sikh princes supported the British rather than local Indian rebels.</li>
+              <li>The British could defeat dispersed rebel groups one after another.</li>
+            </ul><div class="link-box"><strong>Link to main theme</strong>The revolt remained scattered, contributing to the failure of the War of Independence in 1857.</div></div>
+          </article>
+          <article class="lens-card">
+            <button class="lens-trigger" type="button" aria-expanded="false" aria-controls="lens-e2" data-lens="e2">
+              <span class="lens-code">E2</span><span class="lens-title">No common leadership <span class="lens-subtitle">Why resistance lacked a coordinated plan</span></span><span class="plus" aria-hidden="true">+</span>
+            </button>
+            <div class="lens-content" id="lens-e2" hidden><ul>
+              <li>Rebel attempts were uncoordinated because no single leadership directed them.</li>
+              <li>Bahadur Shah Zafar, Nana Sahib and the Rani of Jhansi had their own interests, weakening unity.</li>
+              <li>There was no clear shared political or military plan, while British forces followed a more organised strategy.</li>
+              <li>The revolt lost direction and momentum.</li>
+            </ul><div class="link-box"><strong>Link to main theme</strong>Without united leadership, resistance was weakened, contributing to the failure of the War of Independence in 1857.</div></div>
+          </article>
+          <article class="lens-card">
+            <button class="lens-trigger" type="button" aria-expanded="false" aria-controls="lens-e3" data-lens="e3">
+              <span class="lens-code">E3</span><span class="lens-title">Limited resources <span class="lens-subtitle">Why the uprising was hard to sustain</span></span><span class="plus" aria-hidden="true">+</span>
+            </button>
+            <div class="lens-content" id="lens-e3" hidden><ul>
+              <li>Shortages of resources posed a serious challenge.</li>
+              <li>Rebels relied on looted British treasuries, but the funds were insufficient.</li>
+              <li>They struggled to feed their forces and supply weapons.</li>
+              <li>Without effective communication networks, Indian forces could not coordinate their movements.</li>
+            </ul><div class="link-box"><strong>Link to main theme</strong>Insufficient resources weakened the struggle and contributed to the failure of the War of Independence in 1857.</div></div>
+          </article>
+          <article class="lens-card">
+            <button class="lens-trigger" type="button" aria-expanded="false" aria-controls="lens-e4" data-lens="e4">
+              <span class="lens-code">E4</span><span class="lens-title">British strength <span class="lens-subtitle">Why rebel forces were outmatched</span></span><span class="plus" aria-hidden="true">+</span>
+            </button>
+            <div class="lens-content" id="lens-e4" hidden><ul>
+              <li>British forces had modern weapons and a regular, professionally trained army.</li>
+              <li>They had skilled, disciplined military commanders.</li>
+              <li>The reference describes the British force as more united, without the religious, regional and caste divisions identified among the rebels.</li>
+              <li>British troops were trained to respond to military emergencies.</li>
+            </ul><div class="link-box"><strong>Link to main theme</strong>British military superiority made effective competition difficult for the rebels, contributing to the failure of the War of Independence in 1857.</div></div>
+          </article>
+        </div>
+        <div class="conclusion-strip">
+          <div class="seal">Final<br>step</div>
+          <div><strong>Conclusion / “To what extent?”</strong><p>After explaining competing causes, weigh whether different aims were the <em>main</em> reason and support a clear overall judgement.</p></div>
+          <span class="mono">A REASONED VERDICT</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section assessment" id="marks" aria-labelledby="marks-heading">
+      <div class="wrap assessment-grid">
+        <div>
+          <span class="eyebrow muted">04 / WHY THE MARKS DIFFER</span>
+          <h2 id="marks-heading">The difference isn't length.<br>It's reasoning.</h2>
+          <table class="assessment-table">
+            <thead><tr><th scope="col">Examiner looks for</th><th scope="col">Weaker response</th><th scope="col">Stronger response</th></tr></thead>
+            <tbody>
+              <tr><td>Relevant knowledge</td><td>Names factors without meaningful detail.</td><td>Uses relevant examples from the reference, including the Nizam, Sikh princes and rebel leaders.</td></tr>
+              <tr><td>Cause and effect</td><td>States that factors existed.</td><td>Explains how divisions, leadership, shortages and British capabilities affected the struggle.</td></tr>
+              <tr><td>Link to the theme</td><td>Rarely connects an idea to the revolt's short duration.</td><td>Links each developed factor to the revolt's failure.</td></tr>
+              <tr><td>Evaluation</td><td>Lists multiple factors without comparison.</td><td>Weighs different aims against three other explanations.</td></tr>
+              <tr><td>Final judgement</td><td>Simply repeats that the revolt failed.</td><td>Answers “to what extent?” with a supported, qualified conclusion.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <aside class="assessment-aside">
+          <span class="eyebrow">ILLUSTRATIVE SCORING</span>
+          <h3>Why 4/14 versus 12/14?</h3>
+          <p>The low-scoring example demonstrates limited development and no judgement. The stronger example demonstrates explanation across all four reference areas and a reasoned conclusion.</p>
+          <div class="score-viz" aria-label="Illustrative scores visualisation">
+            <div class="bar-label"><span>Paper 01 · weak</span><span class="mono">4 / 14</span></div>
+            <div class="bar-track"><div class="bar-fill low" data-score="4" style="width:28.571%"></div></div>
+            <div class="bar-label"><span>Paper 02 · strong</span><span class="mono">12 / 14</span></div>
+            <div class="bar-track"><div class="bar-fill" data-score="12" style="width:85.714%"></div></div>
+          </div>
+          <p class="small-note"><strong>Assessment integrity:</strong> The uploaded reference specifies E1–E4 and a conclusion but does not assign marks to each part or contain an official Cambridge level descriptor. The 4/14 and 12/14 figures are demonstration estimates only—not verified examiner awards or an official marking scheme.</p>
+          <p class="small-note" style="margin-bottom:0">Final scoring should be moderated by Sir Khizar against the applicable examination mark scheme before using specific marks in public marketing.</p>
+        </aside>
+      </div>
+    </section>
+
+  </main>
+  <script>
+  (() => {
+    'use strict';
+    const $ = (sel, parent=document) => parent.querySelector(sel);
+    const $$ = (sel, parent=document) => [...parent.querySelectorAll(sel)];
+    const pair = $('#paper-pair');
+    const paperNodes = $$('.paper');
+    const annotations = $('#annotations-toggle');
+    const lensButtons = $$('.lens-trigger');
+    const focusButtons = $$('[data-focus]');
+    const messages = {
+      all: ['What makes the difference?', 'The weaker response names several correct ideas without showing how they caused the revolt to fail. The stronger response builds a chain of reasoning and finishes with a supported judgement.'],
+      e1: ['E1 / Different aims and unity', 'Weak: simply says groups had different aims. Strong: adds divisions, non-participating states and British-aligned rulers, then explains how scattered resistance allowed rebels to be defeated separately.'],
+      e2: ['E2 / Common leadership', 'Weak: lists names of leaders. Strong: explains that separate interests and no common political or military plan undermined coordination and caused the uprising to lose momentum.'],
+      e3: ['E3 / Limited resources', 'Weak: lists shortages. Strong: explains why insufficient money, supplies, weapons and communication networks made sustained, coordinated resistance difficult.'],
+      e4: ['E4 / British military strength', 'Weak: calls the British army stronger. Strong: identifies training, weapons and commanders and explains how those advantages made rebel weaknesses more costly.'],
+      conclusion: ['Conclusion / To what extent?', 'Weak: says every reason mattered, without ranking or judging them. Strong: gives substantial weight to differing aims while explaining why leadership, resources and British strength must also be considered.']
+    };
+    function setLens(button, expanded) {
+      button.setAttribute('aria-expanded', String(expanded));
+      const content = document.getElementById(button.getAttribute('aria-controls'));
+      if(content) content.hidden = !expanded;
+      const plus = $('.plus',button);
+      if(plus) plus.textContent=expanded?'−':'+';
+    }
+    lensButtons.forEach(b => b.addEventListener('click', () => setLens(b,b.getAttribute('aria-expanded') !== 'true')));
+    const expandAll = $('#expand-all');
+    expandAll.addEventListener('click', () => {
+      const allOpen = lensButtons.every(b => b.getAttribute('aria-expanded') === 'true');
+      lensButtons.forEach(b => setLens(b,!allOpen));
+      expandAll.textContent = allOpen ? 'Expand all +' : 'Collapse all −';
+      expandAll.setAttribute('aria-label', allOpen ? 'Expand all four evidence cards' : 'Collapse all four evidence cards');
+    });
+    annotations.addEventListener('click', () => {
+      const next = annotations.getAttribute('aria-pressed') !== 'true';
+      annotations.setAttribute('aria-pressed', String(next));
+      paperNodes.forEach(p=>p.classList.toggle('annotations-on',next));
+      $('#annotations-label').textContent = next ? 'Examiner notes on' : 'Examiner notes off';
+    });
+    function setPaper(which, scroll=false) {
+      pair.dataset.activePaper=which;
+      $$('[data-show-paper]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.showPaper===which)));
+      if(scroll && window.matchMedia('(max-width:800px)').matches) pair.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+    $$('[data-show-paper]').forEach(b=>b.addEventListener('click',()=>setPaper(b.dataset.showPaper)));
+    $('#read-weak').addEventListener('click',()=> {setPaper('weak'); const target=$('.weak-paper');target.scrollIntoView({behavior:'smooth',block:'start'});});
+    $('#read-strong').addEventListener('click',()=> {setPaper('strong'); const target=$('.strong-paper');target.scrollIntoView({behavior:'smooth',block:'start'});});
+    function setFocus(key){
+      if(!messages[key]) return;
+      const [head,body] = messages[key];
+      $('#focus-title').textContent=head;
+      $('#focus-description').textContent=body;
+      focusButtons.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.focus===key)));
+      $$('.response-p[data-focus-key]').forEach(p=>{
+        const isTarget = p.dataset.focusKey===key;
+        p.classList.toggle('focused',key!=='all'&&isTarget);
+        p.classList.toggle('faded',key!=='all'&&!isTarget);
+      });
+    }
+    focusButtons.forEach(b=>b.addEventListener('click',()=>{
+      const key=b.dataset.focus;
+      setFocus(key);
+      if(key!=='all' && window.matchMedia('(max-width:800px)').matches){setPaper('strong');}
+      if(key!=='all'){
+        const target=$('.strong-paper .response-p[data-focus-key="'+key+'"]');
+        if(target) target.scrollIntoView({behavior:'smooth',block:'center'});
+      }
+    }));
+    setFocus('all');
+    // The component works entirely without external libraries or network services.
+  })();
+  </script>
+</body>
+</html>
+
+
+
